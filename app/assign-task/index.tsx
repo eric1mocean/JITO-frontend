@@ -1,7 +1,7 @@
 import { api_route } from "@/constants/API";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View, Button } from "react-native";
+import { Alert, Button, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Divider, Menu, Provider } from "react-native-paper";
 
 type user = {
@@ -46,13 +46,13 @@ const AssignForm = () => {
 
   const handleAssign = async () => {
     if (!selectedUser || !selectedTask) {
-      Alert.alert("Eroare", "Selectează un user și un task.");
+      Alert.alert("Error", "Select user & task");
       return;
     }
     await axios.put(`${api_route}/assignTasks/${selectedUser.id}/${selectedTask.id}`)
     Alert.alert(
       "Succes",
-      `Task-ul "${selectedTask.title}" a fost asignat către ${selectedUser.name}`
+      `${selectedTask.title}" has been assigned to ${selectedUser.name}`
     );
     
   };
@@ -60,13 +60,13 @@ const AssignForm = () => {
   return (
     <Provider>
       <View style={styles.container}>
-        <Text style={styles.label}>Selectează un User</Text>
+        <Text style={styles.label}>User selection</Text>
         <Menu
           visible={userMenuVisible}
           onDismiss={() => setUserMenuVisible(false)}
           anchor={
             <Button
-              title={selectedUser ? selectedUser.name : "Alege un user"}
+              title={selectedUser ? selectedUser.name : "Choose user"}
               onPress={() => setUserMenuVisible(true)}
             />
           }
@@ -79,21 +79,21 @@ const AssignForm = () => {
                 setSelectedUser({ id: user.userId, name: user.userName });
                 setUserMenuVisible(false);
               }}
-              title={user.userEmail}
+              title={user.userName}
             />
           ))}
           </ScrollView>
         </Menu>
         <Divider style={{ marginVertical: 20 }} /> 
 
-        <Text style={styles.label}>Selectează un Task</Text>
+        <Text style={styles.label}>Task selection</Text>
         <Menu
           visible={taskMenuVisible}
           onDismiss={() => setTaskMenuVisible(false)}
           anchor={
 
           <Button
-            title={selectedTask ? selectedTask.title : "Alege un task"}
+            title={selectedTask ? selectedTask.title : "Choose task"}
             onPress={() => setTaskMenuVisible(true)}
         />
           }

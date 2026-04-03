@@ -42,13 +42,16 @@ const HomePage = () => {
   }
 
   return (
-    <View style={styles.center}>
-      <Text style={styles.greeting}>
-        
-        {user?.role}
-        
-            
-      </Text>
+  <View
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    <Text style={styles.greeting}>
+      Hello, {user?.username}
+    </Text>
       {
         user?.role == "teamleader" ? 
         <>

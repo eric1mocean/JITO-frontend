@@ -17,7 +17,7 @@ const schema = z
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: "Passwords do not match.",
     path: ['confirmPassword'],
   });
 
