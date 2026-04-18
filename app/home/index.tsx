@@ -18,6 +18,7 @@ const HomePage = () => {
   const loadUser = async () => {
     try {
       const userData = await AsyncStorage.getItem('user');
+      console.log("Loaded user data:", userData);
       if (userData) {
         const parsedUser: User = JSON.parse(userData);
         setUser(parsedUser);
@@ -58,10 +59,14 @@ const HomePage = () => {
           <Button title="View tasks" onPress={() => router.push("/view-tasks")}  />
           <Button title="Create task" onPress={() => router.push("/create-task")} />
           <Button title="Assign task" onPress={() => router.push("/assign-task")} />
+          <Button title="Delete task" onPress={() => router.push("/delete-task")} />
+          
         </>
         : user?.role == "admin" ?
         <>
+          <Button title="View inactive users" onPress={() => router.push("/inactive-users")} />
           <Button title="View tasks" onPress={() => router.push("/view-tasks")}  />
+          <Button title="Delete user" onPress={() => router.push("/delete-user")} />
         </>
         : <Button title="User tasks" onPress={() => router.push("/user-tasks")}  />
       }

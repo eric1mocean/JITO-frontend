@@ -3,12 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    FlatList,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from "react-native";
 
 enum TaskStatus {
@@ -48,7 +48,7 @@ const UserTasksPage = () => {
         return parsed.id;
     };
 
-    // 🔹 Fetch tasks
+    
     const fetchTasks = async () => {
         try {
             setLoading(true);
@@ -67,7 +67,7 @@ const UserTasksPage = () => {
         }
     };
 
-    // 🔹 Change status
+    
     const changeStatus = async (taskId: number, newStatus: TaskStatus) => {
         try {
             if (!userId) return;
@@ -76,11 +76,11 @@ const UserTasksPage = () => {
                 `${api_route}/changeStatus?userId=${userId}&taskId=${taskId}&newStatus=${newStatus}`
             );
 
-            // refresh (basic approach)
+            
             fetchTasks();
         } catch (err) {
             console.error("Update error", err);
-        }
+        }   
     };
 
     useEffect(() => {
@@ -167,20 +167,6 @@ const UserTasksPage = () => {
     );
 };
 
-// 🔹 Reusable button
-const ActionBtn = ({
-    label,
-    onPress,
-    color = "#007BFF"
-}: {
-    label: string;
-    onPress: () => void;
-    color?: string;
-}) => (
-    <TouchableOpacity style={[styles.actionBtn, { backgroundColor: color }]} onPress={onPress}>
-        <Text style={styles.actionText}>{label}</Text>
-    </TouchableOpacity>
-);
 
 const styles = StyleSheet.create({
     container: {

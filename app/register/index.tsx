@@ -17,6 +17,15 @@ const schema = z.object({
   role: z.string().min(3)        
 });
 
+type ApiSchema = z.infer<typeof schema>;
+
+type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
 
 export default function RegisterScreen() {
   const {
@@ -27,14 +36,15 @@ export default function RegisterScreen() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data : ApiSchema) => {
   try {
     const response = await axios.post(`${api_route}/createUser`, data);
-    Alert.alert('Success', 'Registered successfully!');
-  } catch (error) {
+    Alert.alert('Success', 'Registered successfully!'); 
+  } catch (error: any ) {
+  const message = (error as ApiError).response?.data?.message || "Try with different credentials";
 
-    Alert.alert(JSON.stringify(error));
-  }
+  Alert.alert("Error", message);
+}
     };
 
   const router = useRouter();

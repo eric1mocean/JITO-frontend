@@ -43,18 +43,30 @@ const AssignForm = () => {
 
   }, [])
 
+  type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
 
   const handleAssign = async () => {
     if (!selectedUser || !selectedTask) {
       Alert.alert("Error", "Select user & task");
       return;
     }
+    try {
     await axios.put(`${api_route}/assignTasks/${selectedUser.id}/${selectedTask.id}`)
     Alert.alert(
       "Succes",
       `${selectedTask.title}" has been assigned to ${selectedUser.name}`
     );
-    
+  } catch (error: any) {
+    const message = (error as ApiError).response?.data?.message 
+    || "There is a posibility that the user might already be assigned to the selected task";
+    Alert.alert("Error", message);
+  }
   };
 
   return (

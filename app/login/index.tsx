@@ -20,6 +20,15 @@ const schema = z
     message: "Passwords do not match.",
     path: ['confirmPassword'],
   });
+type ApiSchema = z.infer<typeof schema>;
+
+type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
 
 export default function LoginScreen() {
   const {
@@ -30,7 +39,7 @@ export default function LoginScreen() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data : ApiSchema) => {
     try {
     const response = await axios.post(`${api_route}/loginUser/`, data);
     console.log(response.data);
@@ -38,10 +47,12 @@ export default function LoginScreen() {
     //@ts-ignore
     router.push('/home');
     Alert.alert('Success', 'Logged in successfully!');
-  } catch (error) {
-    Alert.alert(`${api_route}/loginUser/`)
-  }
+  } catch (error: any) {
+    Alert.alert(error);
+  const message = (error as ApiError).response?.data?.message || "Invalid credentials";
+  Alert.alert("Error", message); 
     };
+  }
 
   
 
@@ -82,7 +93,7 @@ export default function LoginScreen() {
       />
       {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
-      <Text>Re-enter Password</Text>
+      <Text>Re-enter password</Text>
       <Controller
         control={control}
         name="confirmPassword"
