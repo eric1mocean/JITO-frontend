@@ -87,40 +87,71 @@ const UserTasksPage = () => {
         fetchTasks();
     }, []);
 
-    // 🔹 Action buttons based on status
     const renderActions = (task: TaskDTO) => {
 
-        switch (task.status) {
+    if (
+        task.status === TaskStatus.COMPLETED ||
+        task.status === TaskStatus.CANCELLED
+    ) {
+        return null;
+    }
 
-            case TaskStatus.PENDING:
-            case TaskStatus.OPEN:
-                return (
-                    <View style={styles.actions}>
-                        <ActionBtn label="Start" onPress={() => changeStatus(task.id, TaskStatus.INPROGRESS)} />
-                        <ActionBtn label="Reject" color="#dc3545" onPress={() => changeStatus(task.id, TaskStatus.REJECTED)} />
-                    </View>
-                );
+    switch (task.status) {
 
-            case TaskStatus.INPROGRESS:
-                return (
-                    <View style={styles.actions}>
-                        <ActionBtn label="Complete" color="#28a745" onPress={() => changeStatus(task.id, TaskStatus.COMPLETED)} />
-                        <ActionBtn label="On Hold" color="#fd7e14" onPress={() => changeStatus(task.id, TaskStatus.ONHOLD)} />
-                    </View>
-                );
+        case TaskStatus.PENDING:
+        case TaskStatus.OPEN:
+            return (
+                <View style={styles.actions}>
+                    <ActionBtn
+                        label="Start"
+                        onPress={() => changeStatus(task.id, TaskStatus.INPROGRESS)}
+                    />
 
-            case TaskStatus.ONHOLD:
-                return (
-                    <View style={styles.actions}>
-                        <ActionBtn label="Resume" onPress={() => changeStatus(task.id, TaskStatus.INPROGRESS)} />
-                        <ActionBtn label="Cancel" color="#6c757d" onPress={() => changeStatus(task.id, TaskStatus.CANCELLED)} />
-                    </View>
-                );
+                    <ActionBtn
+                        label="Reject"
+                        color="#dc3545"
+                        onPress={() => changeStatus(task.id, TaskStatus.REJECTED)}
+                    />
+                </View>
+            );
 
-            default:
-                return null;
-        }
-    };
+        case TaskStatus.INPROGRESS:
+            return (
+                <View style={styles.actions}>
+                    <ActionBtn
+                        label="Complete"
+                        color="#28a745"
+                        onPress={() => changeStatus(task.id, TaskStatus.COMPLETED)}
+                    />
+
+                    <ActionBtn
+                        label="On Hold"
+                        color="#fd7e14"
+                        onPress={() => changeStatus(task.id, TaskStatus.ONHOLD)}
+                    />
+                </View>
+            );
+
+        case TaskStatus.ONHOLD:
+            return (
+                <View style={styles.actions}>
+                    <ActionBtn
+                        label="Resume"
+                        onPress={() => changeStatus(task.id, TaskStatus.INPROGRESS)}
+                    />
+
+                    <ActionBtn
+                        label="Cancel"
+                        color="#6c757d"
+                        onPress={() => changeStatus(task.id, TaskStatus.CANCELLED)}
+                    />
+                </View>
+            );
+
+        default:
+            return null;
+    }
+};
 
     if (loading) {
         return (
