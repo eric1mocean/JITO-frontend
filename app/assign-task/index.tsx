@@ -60,7 +60,7 @@ const AssignForm = () => {
     await axios.put(`${api_route}/assignTasks/${selectedUser.id}/${selectedTask.id}`)
     Alert.alert(
       "Succes",
-      `${selectedTask.title}" has been assigned to ${selectedUser.name}`
+      `${selectedTask.title} has been assigned to ${selectedUser.name}.`
     );
   } catch (error: any) {
     const message = (error as ApiError).response?.data?.message 

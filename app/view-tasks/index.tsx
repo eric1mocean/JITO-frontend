@@ -66,13 +66,13 @@ const AssignTaskPage = () => {
         <View style={styles.container}>
             <TouchableOpacity onPress={handleFetchedTasks}>Refresh</TouchableOpacity>
             <View style={styles.tabBar}>
-                <TouchableOpacity onPress={() => { setActiveTab("Pending"); setTasksToShow(tasks.getTasksDTOPending); }} style={[styles.tabButton, activeTab === "Pending" && tabstyles.tabButtonActive]}><Text>Pendings</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => { setActiveTab("Pending"); setTasksToShow(tasks.getTasksDTOPending); }} style={[styles.tabButton, activeTab === "Pending" && tabstyles.tabButtonActive]}><Text>Pending</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => { setActiveTab("Completed"); setTasksToShow(tasks.getTasksDTOCompleted) }} style={[styles.tabButton, activeTab === "Completed" && tabstyles.tabButtonActive]}><Text>Completed</Text></TouchableOpacity>
-                <TouchableOpacity onPress={() => { setActiveTab("In progress"); setTasksToShow(tasks.getTasksDTOInProgress) }} style={[styles.tabButton, activeTab === "In progress" && tabstyles.tabButtonActive]}><Text>InProgress</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => { setActiveTab("In progress"); setTasksToShow(tasks.getTasksDTOInProgress) }} style={[styles.tabButton, activeTab === "In progress" && tabstyles.tabButtonActive]}><Text>In Progress</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => { setActiveTab("Open"); setTasksToShow(tasks.getTasksDTOOpen) }} style={[styles.tabButton, activeTab === "Open" && tabstyles.tabButtonActive]}><Text>Open</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => { setActiveTab("Rejected"); setTasksToShow(tasks.getTasksDTORejected) }} style={[styles.tabButton, activeTab === "Rejected" && tabstyles.tabButtonActive]}><Text>Rejected</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => { setActiveTab("Cancelled"); setTasksToShow(tasks.getTasksDTOCancelled) }} style={[styles.tabButton, activeTab === "Cancelled" && tabstyles.tabButtonActive]}><Text>Cancelled</Text></TouchableOpacity>
-                <TouchableOpacity onPress={() => { setActiveTab("On hold"); setTasksToShow(tasks.getTasksDTOOnHold) }} style={[styles.tabButton, activeTab === "On hold" && tabstyles.tabButtonActive]}><Text>OnHold</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => { setActiveTab("On hold"); setTasksToShow(tasks.getTasksDTOOnHold) }} style={[styles.tabButton, activeTab === "On hold" && tabstyles.tabButtonActive]}><Text>On Hold</Text></TouchableOpacity>
 
 
             </View>
@@ -119,7 +119,7 @@ const AssignTaskPage = () => {
 const styles = StyleSheet.create({
     tabBar: {
         flexDirection: "row",
-        flexWrap: "wrap",          // allow wrapping to new lines
+        flexWrap: "wrap",          
     },
     card: {
         backgroundColor: "#fff",
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
         color: "#888",
     },
     tabButton: {
-        width: "33.33%",           // 3 per row
+        width: "33.33%",           
         padding: 10,
         alignItems: "center",
         borderWidth: 1,

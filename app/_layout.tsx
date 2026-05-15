@@ -26,11 +26,16 @@ export default function RootLayout() {
         <Stack.Screen name="home/index" options={{ title: 'Home' }} />
         <Stack.Screen name="create-task/index" options={{ title: 'Create task' }} />
         <Stack.Screen name="view-tasks/index" options={{ title: 'View tasks' }} />
-        <Stack.Screen name="assign-task/index" options={{ title: 'Assign tasks' }} />
+        <Stack.Screen name="assign-task/index" options={{ title: 'Assign task' }} />
         <Stack.Screen name="delete-task/index" options={{ title: 'Delete tasks' }} />
         <Stack.Screen name="delete-user/index" options={{ title: 'Delete users' }} />
-        <Stack.Screen name="view-task-details/[id]" options={{ title: "Task page" }} /> 
-        <Stack.Screen name="user-tasks/index" options={{ title: "User tasks" }} 
+        <Stack.Screen name="view-task-details/view-tasks/[id]" options={{ title: 'Task details' }} /> 
+        <Stack.Screen name="user-tasks/index" options={{ title: "User tasks" }}  />
+        <Stack.Screen name="inactive-users/index" options={{ title: "Inactive users" }} />
+        <Stack.Screen name="noification-page/index" options={{ title: "Notification page" }}  
+  
+        
+
 
 />
 

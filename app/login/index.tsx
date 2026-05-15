@@ -48,9 +48,10 @@ export default function LoginScreen() {
     router.push('/home');
     Alert.alert('Success', 'Logged in successfully!');
   } catch (error: any) {
-    Alert.alert(error);
-  const message = (error as ApiError).response?.data?.message || "Invalid credentials";
-  Alert.alert("Error", message); 
+    
+  const message = (error as ApiError).response?.data?.message || "Try with different credentials.";
+  
+    Alert.alert("Error", message);
     };
   }
 

@@ -10,7 +10,16 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
-
+const ActionBtn = ({ label, onPress, color = "#007BFF" }) => {
+    return (
+        <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: color }]}
+            onPress={onPress}
+        >
+            <Text style={styles.actionText}>{label}</Text>
+        </TouchableOpacity>
+    );
+};
 enum TaskStatus {
     PENDING = "PENDING",
     COMPLETED = "COMPLETED",
@@ -36,7 +45,6 @@ const UserTasksPage = () => {
     const [loading, setLoading] = useState(true);
     const [userId, setUserId] = useState<number | null>(null);
 
-    // 🔹 Get userId from storage
     const getUserId = async () => {
         const user = await AsyncStorage.getItem("user");
 
@@ -68,20 +76,35 @@ const UserTasksPage = () => {
     };
 
     
-    const changeStatus = async (taskId: number, newStatus: TaskStatus) => {
-        try {
-            if (!userId) return;
+    const changeStatus = async (
+   taskId: number,
+   newStatus: TaskStatus
+) => {
+   try {
 
-            await axios.put(
-                `${api_route}/changeStatus?userId=${userId}&taskId=${taskId}&newStatus=${newStatus}`
-            );
+      if (!userId) {
+         return;
+      }
 
-            
-            fetchTasks();
-        } catch (err) {
-            console.error("Update error", err);
-        }   
-    };
+      await axios.put(
+         `${api_route}/changeStatus`,
+         {
+            userId: userId,
+            taskId: taskId,
+            newStatus: newStatus
+         }
+      );
+
+      await fetchTasks();
+
+   } catch (err: any) {
+
+      console.error(
+         "Update error:",
+         err.response?.data || err.message
+      );
+   }
+};
 
     useEffect(() => {
         fetchTasks();
@@ -89,69 +112,37 @@ const UserTasksPage = () => {
 
     const renderActions = (task: TaskDTO) => {
 
-    if (
-        task.status === TaskStatus.COMPLETED ||
-        task.status === TaskStatus.CANCELLED
-    ) {
-        return null;
-    }
+        switch (task.status) {
 
-    switch (task.status) {
+            case TaskStatus.PENDING:
+            case TaskStatus.OPEN:
+                return (
+                    <View style={styles.actions}>
+                        <ActionBtn label="Start" onPress={() => changeStatus(task.id, TaskStatus.INPROGRESS)} />
+                        <ActionBtn label="Reject" color="#dc3545" onPress={() => changeStatus(task.id, TaskStatus.REJECTED)} />
+                    </View>
+                );
 
-        case TaskStatus.PENDING:
-        case TaskStatus.OPEN:
-            return (
-                <View style={styles.actions}>
-                    <ActionBtn
-                        label="Start"
-                        onPress={() => changeStatus(task.id, TaskStatus.INPROGRESS)}
-                    />
+            case TaskStatus.INPROGRESS:
+                return (
+                    <View style={styles.actions}>
+                        <ActionBtn label="Complete" color="#28a745" onPress={() => changeStatus(task.id, TaskStatus.COMPLETED)} />
+                        <ActionBtn label="On Hold" color="#fd7e14" onPress={() => changeStatus(task.id, TaskStatus.ONHOLD)} />
+                    </View>
+                );
 
-                    <ActionBtn
-                        label="Reject"
-                        color="#dc3545"
-                        onPress={() => changeStatus(task.id, TaskStatus.REJECTED)}
-                    />
-                </View>
-            );
+            case TaskStatus.ONHOLD:
+                return (
+                    <View style={styles.actions}>
+                        <ActionBtn label="Resume" onPress={() => changeStatus(task.id, TaskStatus.INPROGRESS)} />
+                        <ActionBtn label="Cancel" color="#6c757d" onPress={() => changeStatus(task.id, TaskStatus.CANCELLED)} />
+                    </View>
+                );
 
-        case TaskStatus.INPROGRESS:
-            return (
-                <View style={styles.actions}>
-                    <ActionBtn
-                        label="Complete"
-                        color="#28a745"
-                        onPress={() => changeStatus(task.id, TaskStatus.COMPLETED)}
-                    />
-
-                    <ActionBtn
-                        label="On Hold"
-                        color="#fd7e14"
-                        onPress={() => changeStatus(task.id, TaskStatus.ONHOLD)}
-                    />
-                </View>
-            );
-
-        case TaskStatus.ONHOLD:
-            return (
-                <View style={styles.actions}>
-                    <ActionBtn
-                        label="Resume"
-                        onPress={() => changeStatus(task.id, TaskStatus.INPROGRESS)}
-                    />
-
-                    <ActionBtn
-                        label="Cancel"
-                        color="#6c757d"
-                        onPress={() => changeStatus(task.id, TaskStatus.CANCELLED)}
-                    />
-                </View>
-            );
-
-        default:
-            return null;
-    }
-};
+            default:
+                return null;
+        }
+    };
 
     if (loading) {
         return (

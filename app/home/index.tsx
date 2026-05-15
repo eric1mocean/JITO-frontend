@@ -1,11 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+} from 'react-native';
 
 interface User {
-  
-  id: string
+  id: string;
   username: string;
   email: string;
   role: string;
@@ -14,11 +21,13 @@ interface User {
 const HomePage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter()
+
+  const router = useRouter();
+
   const loadUser = async () => {
     try {
       const userData = await AsyncStorage.getItem('user');
-      console.log("Loaded user data:", userData);
+
       if (userData) {
         const parsedUser: User = JSON.parse(userData);
         setUser(parsedUser);
@@ -34,64 +43,173 @@ const HomePage = () => {
     loadUser();
   }, []);
 
+  const MenuButton = ({
+    title,
+    route,
+  }: {
+    title: string;
+    route: any;
+  }) => (
+    <Pressable
+      style={styles.menuButton}
+      onPress={() => router.push(route)}
+    >
+      <Text style={styles.menuButtonText}>{title}</Text>
+    </Pressable>
+  );
+
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#4F46E5" />
       </View>
     );
   }
 
   return (
-  <View
-    style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    }}
-  >
-    <Text style={styles.greeting}>
-      Hello, {user?.username}
-    </Text>
-      {
-        user?.role == "teamleader" ? 
-        <>
-          <Button title="View tasks" onPress={() => router.push("/view-tasks")}  />
-          <Button title="Create task" onPress={() => router.push("/create-task")} />
-          <Button title="Assign task" onPress={() => router.push("/assign-task")} />
-          <Button title="Delete task" onPress={() => router.push("/delete-task")} />
-          
-        </>
-        : user?.role == "admin" ?
-        <>
-          <Button title="View inactive users" onPress={() => router.push("/inactive-users")} />
-          <Button title="View tasks" onPress={() => router.push("/view-tasks")}  />
-          <Button title="Delete user" onPress={() => router.push("/delete-user")} />
-        </>
-        : <Button title="User tasks" onPress={() => router.push("/user-tasks")}  />
-      }
-      
-    </View>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.card}>
+        <Text style={styles.title}>Welcome back 👋</Text>
+
+        <Text style={styles.username}>
+          {user?.username}
+        </Text>
+
+        <View style={styles.roleBadge}>
+          <Text style={styles.roleText}>
+            {user?.role?.toUpperCase()}
+          </Text>
+        </View>
+
+        <Text style={styles.email}>
+          {user?.email}
+        </Text>
+      </View>
+
+      <View style={styles.menuContainer}>
+        {user?.role === 'teamleader' ? (
+          <>
+            <MenuButton title="📋 View Tasks" route="/view-tasks" />
+            <MenuButton title="➕ Create Task" route="/create-task" />
+            <MenuButton title="👥 Assign Task" route="/assign-task" />
+            <MenuButton title="🗑 Delete Task" route="/delete-task" />
+            <MenuButton
+              title="🔔 Notifications"
+              route="/notification-page"
+            />
+          </>
+        ) : user?.role === 'admin' ? (
+          <>
+            <MenuButton
+              title="👤 Inactive Users"
+              route="/inactive-users"
+            />
+            <MenuButton title="📋 View Tasks" route="/view-tasks" />
+            <MenuButton title="❌ Delete User" route="/delete-user" />
+          </>
+        ) : (
+          <MenuButton title="📋 User Tasks" route="/user-tasks" />
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
 export default HomePage;
 
 const styles = StyleSheet.create({
-  center: {
-    
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#F3F4F6',
+    padding: 20,
+    justifyContent: 'center',
+  },
+
+  loaderContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column'
+    backgroundColor: '#F3F4F6',
   },
-  greeting: {
-    fontSize: 24,
+
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 24,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+
+    elevation: 5,
+
+    marginBottom: 25,
+  },
+
+  title: {
+    fontSize: 20,
+    color: '#6B7280',
+    marginBottom: 8,
+  },
+
+  username: {
+    fontSize: 30,
     fontWeight: 'bold',
+    color: '#111827',
   },
-  linkText: {
-  marginTop: 16,
-  color: '#007bff',
-  textAlign: 'center',
+
+  roleBadge: {
+    marginTop: 12,
+    alignSelf: 'flex-start',
+    backgroundColor: '#4F46E5',
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 999,
+  },
+
+  roleText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 12,
+  },
+
+  email: {
+    marginTop: 12,
+    color: '#6B7280',
+    fontSize: 14,
+  },
+
+  menuContainer: {
+    gap: 14,
+  },
+
+  menuButton: {
+    backgroundColor: '#111827',
+    paddingVertical: 18,
+    borderRadius: 16,
+    alignItems: 'center',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+
+    elevation: 3,
+  },
+
+  menuButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
